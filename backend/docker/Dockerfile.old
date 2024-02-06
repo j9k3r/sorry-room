@@ -1,0 +1,42 @@
+# syntax=docker/dockerfile:1
+#FROM openvino/ubuntu20_dev
+FROM openvino/model_server
+
+USER root
+
+# model_server
+RUN apt-get update && apt-get install -y python3-pip
+
+# Обновление и установка необходимых пакетов для Python
+#RUN apt-get update && \
+#    apt-get install -y python3
+
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONUNBUFFERED=1
+#ENV PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/local/python3.8/bin"
+
+#ENV PATH="/usr/local/python3.8/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+
+# Добавляем вывод версии Python
+#RUN python3 --version
+
+#env path=$path:/custom/dir/bin
+
+
+
+# Установка matplotlib
+RUN apt-get update && apt-get install -y python3-matplotlib
+
+# Install IPython
+RUN pip install ipython
+
+# скачивалка
+RUN pip install gdown
+
+# вывод ?
+RUN pip install ipywidgets
+
+WORKDIR /code
+COPY requirements.txt /code/
+RUN pip install -r requirements.txt
+COPY . /code/

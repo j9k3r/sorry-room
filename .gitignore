@@ -371,5 +371,5 @@ docs/_book
 test/
 
 # End of https://www.toptal.com/developers/gitignore/api/django,vue,pycharm,phpstorm
-/backend/app/vino/image_cleaner/model/u2net_human_seg/
-/backend/app/vino/image_cleaner/model/u2net_lite/
+/backend/django/vino/image_cleaner/model/u2net_human_seg/
+/backend/django/vino/image_cleaner/model/u2net_lite/

@@ -9,7 +9,7 @@ services:
 #      - POSTGRES_PASSWORD=postgres
   web:
     build: ./backend/docker
-    command: python app/manage.py runserver 0.0.0.0:8000
+    command: python django/manage.py runserver 0.0.0.0:8000
 #    command: tail -f /dev/null
     volumes:
       - ./backend:/code

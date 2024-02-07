@@ -51,7 +51,7 @@ class ImageCleaner:
         )
 
         u2net_model = u2net_human_seg
-        # MODEL_DIR = "/code/app/vino/image_cleaner/model"
+        # MODEL_DIR = "/code/django/vino/image_cleaner/model"
         MODEL_DIR = Path(__file__).resolve().parent / "model"
         model_path = Path(MODEL_DIR) / u2net_model.name / Path(u2net_model.name).with_suffix(".pth")
 

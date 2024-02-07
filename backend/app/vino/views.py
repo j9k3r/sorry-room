@@ -14,12 +14,12 @@ class OpVinoView(APIView):
         if 'type' in data:
             serializer = FileSerializer(data=request.data)
             if serializer.is_valid():
-                image = serializer.validated_data['image']
+                image = serializer.validated_data['img_src']
                 if image.content_type not in ['image/jpeg', 'image/png']:
                     return Response("Only JPG and PNG files are allowed", status=status.HTTP_403_FORBIDDEN)
                 else:
                     image_cleaner = ImageCleaner()
-                    processed_data = image_cleaner.process(image, request.data)
+                    processed_data = image_cleaner.process(image, request)
 
                     # Возврат результата обработки
                     return Response(processed_data, status=status.HTTP_200_OK)

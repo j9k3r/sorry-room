@@ -4,6 +4,8 @@ import {loadLayoutMiddleware} from "@/router/middleware/loadLayout.middleware";
 import {saveErrorsToMeta} from "@/result.functions";
 
 import HomeView from '../views/HomeView.vue'
+import Editor from "@/components/editor/Editor.vue";
+import Test from "@/components/editor/Test.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -12,6 +14,16 @@ const router = createRouter({
       path: '/',
       name: 'home',
       component: HomeView
+    },
+    {
+      path: '/editor',
+      name: 'editor',
+      component: Editor
+    },
+    {
+      path: '/test',
+      name: 'test',
+      component: Test
     },
     {
       path: '/about',

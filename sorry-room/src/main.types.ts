@@ -1,4 +1,3 @@
-// import { Component } from 'vue'
 import { defineComponent } from 'vue'
 
 export type ResultType = {

@@ -9,6 +9,8 @@
       <ul>
         <li><router-link :to="{'name':'home'}">home</router-link></li>
         <li><router-link :to="{'name':'about'}">about</router-link></li>
+        <li><router-link :to="{'name':'editor'}">editor</router-link></li>
+        <li><router-link :to="{'name':'test'}">test</router-link></li>
       </ul>
     </nav>
   </header>

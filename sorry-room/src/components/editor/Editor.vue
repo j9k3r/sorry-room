@@ -4,9 +4,7 @@ import {onMounted, reactive, ref} from "vue";
 
 const fabricWrap = reactive({
   canvas: null,
-  layers: [],
-  rect: null,
-  img: null
+  layers: []
 })
 
 onMounted(() => {
@@ -16,18 +14,15 @@ onMounted(() => {
   });
   fabricWrap.canvas.setOverlayColor("rgba(0,0,255,0.4)",undefined,{erasable:false});
 
-  fabricWrap.rect = new fabric.Circle({ top: 10, left: 100, radius: 75, fill: "green", erasable: true });
-  fabricWrap.img = new fabric.Image({});  // Пустой объект img для инициализации
-
   const imageUrl = 'https://profil.mos.ru/images/banners/bottom/dit-banner.jpg';
   fabric.Image.fromURL(imageUrl, (img) => {
     img.scaleToWidth(200);
-    fabricWrap.img = img; // Сохраняем изображение в fabricWrap.img
-    fabricWrap.layers.push(fabricWrap.img); // Добавляем изображение в массив layers
+    fabricWrap.layers.push(img); // Добавляем изображение в массив layers
     updateCanvas(); // Обновляем canvas
   });
 
-  fabricWrap.layers.push(fabricWrap.rect); // Добавляем circle в массив layers
+  const rect = new fabric.Circle({ top: 10, left: 100, radius: 75, fill: "green", erasable: true });
+  fabricWrap.layers.push(rect); // Добавляем circle в массив layers
   updateCanvas(); // Обновляем canvas
 });
 

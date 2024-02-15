@@ -10,25 +10,33 @@ const fabricWrap = reactive({
 })
 
 onMounted(() => {
-    fabricWrap.canvas = new fabric.Canvas('canvas', {
-      width: 800,
-      height: 600,
-      // isDrawingMode: true
-    });
-    fabricWrap.canvas.setOverlayColor("rgba(0,0,255,0.4)",undefined,{erasable:false});
+  fabricWrap.canvas = new fabric.Canvas('canvas', {
+    width: 800,
+    height: 600
+  });
+  fabricWrap.canvas.setOverlayColor("rgba(0,0,255,0.4)",undefined,{erasable:false});
 
-    fabricWrap.rect = new fabric.Circle({ top: 10, left: 100, radius: 75, fill: "green", erasable: true })
+  fabricWrap.rect = new fabric.Circle({ top: 10, left: 100, radius: 75, fill: "green", erasable: true });
+  fabricWrap.img = new fabric.Image({});  // Пустой объект img для инициализации
 
- const imageUrl = 'https://profil.mos.ru/images/banners/bottom/dit-banner.jpg';  // Замените на вашу ссылку на изображение
+  const imageUrl = 'https://profil.mos.ru/images/banners/bottom/dit-banner.jpg';
   fabric.Image.fromURL(imageUrl, (img) => {
     img.scaleToWidth(200);
-    fabricWrap.img = img; // сохраняем изображение в fabricWrap.img
-    fabricWrap.canvas.add(fabricWrap.img); // добавляем изображение с fabricWrap.img в canvas
+    fabricWrap.img = img; // Сохраняем изображение в fabricWrap.img
+    fabricWrap.layers.push(fabricWrap.img); // Добавляем изображение в массив layers
+    updateCanvas(); // Обновляем canvas
   });
 
+  fabricWrap.layers.push(fabricWrap.rect); // Добавляем circle в массив layers
+  updateCanvas(); // Обновляем canvas
+});
 
-   fabricWrap.canvas.add(fabricWrap.rect);
-})
+function updateCanvas() {
+  fabricWrap.canvas.clear(); // Очищаем canvas
+  fabricWrap.layers.forEach(obj => {
+    fabricWrap.canvas.add(obj); // Добавляем объекты из массива layers в canvas
+  });
+}
 
 function changeAction(target: string) {
 // console.log(target)

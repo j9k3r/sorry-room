@@ -31,6 +31,8 @@ onMounted(() => {
     selectable: true
   });
 
+
+
   // Добавляем объект на canvas
   state.canvas.add(state.rect);
 });

@@ -2,6 +2,8 @@
 import { fabric } from 'fabric-all-modules';
 import {onMounted, reactive, ref} from "vue";
 import {useEditorStore} from "@/stores/editor";
+import Layers from "@/components/editor/Layers.vue";
+import Tools from "@/components/editor/Tools.vue";
 
 const fabricWrap = {
   canvas: null,
@@ -32,22 +34,7 @@ onMounted(() => {
   // editorStore.layers.push(rect);
   editorStore.updateCanvas(fabricWrap.canvas); // обновляем canvas после добавления прямоугольника
 });
-const changeAction = (target) => {
-  if (target === 'erase') {
-    fabricWrap.canvas.freeDrawingBrush = new fabric.EraserBrush(fabricWrap.canvas);
-    fabricWrap.canvas.freeDrawingBrush.width = 10;
-    fabricWrap.canvas.isDrawingMode = true;
-  }
-  if (target === 'select') {
-    fabricWrap.canvas.isDrawingMode = false;
-  }
-}
 
-function selectLayer(index) {
-    fabricWrap.canvas.discardActiveObject();
-    fabricWrap.canvas.setActiveObject(fabricWrap.canvas.item(index))
-    fabricWrap.canvas.requestRenderAll();
-}
 
 // function loadImageToSessionStorageAndAddToCanvas(url) {
 //   // Load image
@@ -80,27 +67,11 @@ function selectLayer(index) {
 <template>
 <section>
   <header>
-    <div class="controls">
-      <button id="select" type="button" @click="changeAction('select')">select</button>
-      <button id="erase" type="button" @click="changeAction('erase')">erase</button>
-      <button id="delete" type="button" @click="editorStore.removeSelectedObject(fabricWrap.canvas)">delete selected</button>
-    </div>
+    <tools :fabricWrap="fabricWrap"></tools>
   </header>
   <div class="body">
     <canvas id="canvas"></canvas>
-    <section>
-      <div v-for="(item, index) in editorStore.layers" :key="index">
-        <div style="color: red">{{ item.desc }}
-          <svg xmlns="http://www.w3.org/2000/svg"width="50" height="50"  viewBox="0 0 50 50" @click="selectLayer(index)"
-               v-html="item.cloned">
-          </svg>
-<!--          <img :src="getThumbnail(item.layer)" alt="thumbnail" @click="selectObject(item.layer)">-->
-<!--          <p>{{ item.layer.type }}</p>-->
-          <button @click="editorStore.moveLayerUp(index, fabricWrap.canvas)">up</button>
-          <button @click="editorStore.moveLayerDown(index, fabricWrap.canvas)">down</button>
-        </div>
-      </div>
-    </section>
+    <layers :fabricWrap="fabricWrap"></layers>
   </div>
   <footer></footer>
 </section>

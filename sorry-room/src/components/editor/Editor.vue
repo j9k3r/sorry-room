@@ -43,67 +43,11 @@ const changeAction = (target) => {
   }
 }
 
-function getThumbnail(object) {
-
-  getThumbnailAsDataURL(object)
-  .then((dataURL) => {
-    console.log(dataURL)
-    // Далее вы можете использовать dataURL для отображения или сохранения миниатюры
-  })
-  .catch((error) => {
-    console.error(error);
-});
-
-  // const img = object._element; // Получаем оригинальный элемент изображения из объекта Proxy
-  // if (img) {
-  //   const tempCanvas = document.createElement('canvas');
-  //   const tempContext = tempCanvas.getContext('2d');
-  //   tempCanvas.width = 50;
-  //   tempCanvas.height = 50;
-  //
-  //   tempContext.drawImage(img, 0, 0, tempCanvas.width, tempCanvas.height);
-  //   const dataURL = tempCanvas.toDataURL('image/png');
-  //   return dataURL; // Возвращаем data URL изображения
-  // } else {
-  //   throw new Error('Failed to get image');
-  // }
+function selectLayer(index) {
+    fabricWrap.canvas.discardActiveObject();
+    fabricWrap.canvas.setActiveObject(fabricWrap.canvas.item(index))
+    fabricWrap.canvas.requestRenderAll();
 }
-
-function getThumbnailAsDataURL(object) {
-
-  return new Promise((resolve, reject) => {
-    // if (object.type !== 'circle') {
-    //   // console.log(object)
-    //   // Создаем временный canvas
-    //   const tempCanvas = document.createElement('canvas');
-    //   const tempContext = tempCanvas.getContext('2d');
-    //   tempCanvas.width = 50;  // Ширина миниатюры
-    //   tempCanvas.height = 50;  // Высота миниатюры
-    //
-    //   // Клонируем объект и масштабируем его
-    //   // const cloneObj = object.clone();
-    //   const cloneObj = object.clone((obj) => {
-    //   obj.scaleToWidth(50, false)
-    //   const svg = obj.toSVG(); // Получаем SVG представление объекта
-    //
-    //   // Создаем изображение в формате data URL из SVG
-    //   console.log(svg)
-    //   const img = new Image();
-    //   img.onload = function () {
-    //     tempContext.drawImage(img, 0, 0, 50, 50);  // Рисуем изображение на canvas
-    //     const dataURL = tempCanvas.toDataURL('image/png');  // Получаем data URL изображения
-    //     resolve(dataURL);  // Возвращаем data URL
-    //   };
-    //   img.onerror = function () {
-    //     reject(new Error('Failed to create thumbnail'));
-    //   };
-    //   img.src = 'data:image/svg+xml; charset=utf8, ' + encodeURIComponent(svg);  // Создаем изображение из SVG
-    //
-    //   });
-    // }
-  });
-}
-
 
 // function loadImageToSessionStorageAndAddToCanvas(url) {
 //   // Load image
@@ -147,13 +91,9 @@ function getThumbnailAsDataURL(object) {
     <section>
       <div v-for="(item, index) in editorStore.layers" :key="index">
         <div style="color: red">{{ item.desc }}
-<!--          <img :src="item.cloned">-->
-          <svg xmlns="http://www.w3.org/2000/svg"width="50" height="50"  viewBox="0 0 50 50"
+          <svg xmlns="http://www.w3.org/2000/svg"width="50" height="50"  viewBox="0 0 50 50" @click="selectLayer(index)"
                v-html="item.cloned">
-
-
           </svg>
-<!--          <img :src="getThumbnail(item.layer)">-->
 <!--          <img :src="getThumbnail(item.layer)" alt="thumbnail" @click="selectObject(item.layer)">-->
 <!--          <p>{{ item.layer.type }}</p>-->
           <button @click="editorStore.moveLayerUp(index, fabricWrap.canvas)">up</button>

@@ -7,20 +7,14 @@ export const useEditorStore = defineStore('editor', () => {
 function updateCanvas(canvas) {
 canvas.clear();
 layers.forEach((obj, index) => {
-  // canvas.add(obj);
-  // obj.layer.scaleToWidth(20, false);
-
      obj.layer.clone((cl) => {
-         console.log(cl)
+         // cl.centerObject(cl)
          cl.left = 0
          cl.top = 0
-         // cl.scaleToWidth(50, false)
          cl.scaleToHeight(50, { aspectRatio: cl.width / cl.height }) // задаем aspectRatio и используем scaleToHeight
       const svg = cl.toSVG();
-         // layers[index].cloned = 'data:image/svg+xml;utf8,' + encodeURIComponent(svg)
          layers[index].cloned = svg
      })
-
   canvas.add(obj.layer);
 });
 }

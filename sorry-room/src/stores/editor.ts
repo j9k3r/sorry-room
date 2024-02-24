@@ -9,6 +9,14 @@ function findIndexLayerById(id: number) {
     return index;
 }
 
+const backgrounds = reactive([
+    {src: '/images/background/bgr1.jpeg', title: 'грустный фон 1'},
+    {src: '/images/background/bgr2.jpeg', title: 'грустный фон 2'},
+    {src: '/images/background/bgr3.jpeg', title: 'грустный фон 3'},
+    {src: '/images/background/bgr4.jpeg', title: 'грустный фон 4'},
+    {src: '/images/background/bgr5.jpeg', title: 'грустный фон 5'},
+    {src: '/images/background/bgr6.jpeg', title: 'грустный фон 6'},
+])
 function updateCanvas(canvas) {
     canvas.clear();
     layers.forEach((obj, index) => {
@@ -60,5 +68,7 @@ function moveLayerDown(id, canvas) {
     }
 }
 
-return { layers, findIndexLayerById, updateCanvas, removeSelectedObject, moveLayerUp, moveLayerDown }
+
+
+return { layers, backgrounds, findIndexLayerById, updateCanvas, removeSelectedObject, moveLayerUp, moveLayerDown }
 })

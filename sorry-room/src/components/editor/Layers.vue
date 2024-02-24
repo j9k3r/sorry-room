@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import {useEditorStore} from "@/stores/editor";
 import {computed, ref} from "vue";
+import {fabric} from "fabric-all-modules";
 
 const props = defineProps({
   fabricWrap: Object
@@ -13,8 +14,8 @@ const layersReverse = computed(() => {
 })
 
 const tab = ref()
+const backgroundFileInput = ref(null)
 function selectLayer(id) {
-  console.log('123')
     const index = editorStore.findIndexLayerById(id)
     props.fabricWrap.canvas.discardActiveObject();
     props.fabricWrap.canvas.setActiveObject(props.fabricWrap.canvas.item(index))
@@ -42,6 +43,32 @@ function convertToBase64(svgString) {
     // document.getElementById('myImg').src = base64data;
   }
 }
+
+function setBackgroundImage(image, canvas) {
+  fabric.Image.fromURL(image, function(img) {
+    // Устанавливаем размер изображения равным размеру Canvas
+    img.scaleToWidth(canvas.width);
+    img.scaleToHeight(canvas.height);
+    // Добавляем изображение в Canvas в качестве заднего фона
+    canvas.setBackgroundImage(img, canvas.renderAll.bind(canvas));
+  });
+}
+
+function uploadImage(e) {
+  const file = e.target.files[0];
+  const reader = new FileReader();
+
+  reader.onload = function (event) {
+    const imgUrl = event.target.result;
+    const newBackground = { src: imgUrl, title: 'Новый фон' };
+    editorStore.backgrounds.push(newBackground);
+    // e.target.value = null
+    backgroundFileInput.value.reset();
+  };
+
+  reader.readAsDataURL(file);
+}
+
 </script>
 
 <template>
@@ -51,8 +78,8 @@ function convertToBase64(svgString) {
       v-model="tab"
       bg-color="primary"
     >
-      <v-tab value="one">Item One</v-tab>
-      <v-tab value="two">Item Two</v-tab>
+      <v-tab value="one">Слои</v-tab>
+      <v-tab value="two">Background</v-tab>
       <v-tab value="three">Item Three</v-tab>
     </v-tabs>
 
@@ -66,19 +93,22 @@ function convertToBase64(svgString) {
             >
               <v-list-item>
                <template v-slot:title class="bg-cyan-darken-1">
+                 <div>
                   index: {{ index }}, id: {{ item.id }}
-                 <v-defaults-provider
-                    :defaults="{
-                      VBtn: {
-                        variant: 'text',
-                        density: 'comfortable',
-                      }
-                    }"
-                  >
-                    <v-btn icon="$vuetify"></v-btn>
-                    <v-btn icon="mdi-arrow-up-bold-outline"  @click="editorStore.moveLayerUp(item.id, props.fabricWrap.canvas)"></v-btn>
-                    <v-btn icon="mdi-arrow-down-bold-outline" @click="editorStore.moveLayerDown(item.id, props.fabricWrap.canvas)"></v-btn>
-                  </v-defaults-provider>
+                 </div>
+                 <div>
+                   <v-defaults-provider
+                      :defaults="{
+                        VBtn: {
+                          variant: 'text',
+                          density: 'comfortable',
+                        }
+                      }"
+                    >
+                      <v-btn icon="mdi-arrow-up-bold-outline"  @click="editorStore.moveLayerUp(item.id, props.fabricWrap.canvas)"></v-btn>
+                      <v-btn icon="mdi-arrow-down-bold-outline" @click="editorStore.moveLayerDown(item.id, props.fabricWrap.canvas)"></v-btn>
+                    </v-defaults-provider>
+                 </div>
                </template>
                <template v-slot:prepend>
                  <v-icon
@@ -97,7 +127,36 @@ function convertToBase64(svgString) {
         </v-window-item>
 
         <v-window-item value="two">
-          Two
+<!--          <input type="file" @change="uploadImage" accept="image/*" />-->
+          <v-file-input
+            ref="backgroundFileInput"
+            label="Add background file"
+            placeholder="Select your file"
+            accept="image/png, image/jpeg, image/bmp"
+            density="compact"
+            @change="uploadImage"
+          ></v-file-input>
+          <v-card
+            class="mx-auto"
+            max-width="425"
+            v-for="(item, index) in editorStore.backgrounds" :key="index"
+          >
+            <v-list-item>
+             <template v-slot:title class="bg-cyan-darken-1">
+               <div>
+                index: {{ index }}
+               </div>
+             </template>
+             <template v-slot:prepend>
+               <v-icon>
+                  <img :src="item.src" width="50px" @click="setBackgroundImage(item.src, props.fabricWrap.canvas)">
+               </v-icon>
+             </template>
+              <template v-slot:subtitle>
+                {{ item.title }}
+              </template>
+            </v-list-item>
+          </v-card>
         </v-window-item>
 
         <v-window-item value="three">
@@ -112,4 +171,10 @@ function convertToBase64(svgString) {
 .v-icon--size-default {
   font-size: calc(var(--v-icon-size-multiplier) * 3.5em);
 }
+
+.v-list-item-title {
+  display: flex !important;
+  justify-content: space-between !important;
+}
+
 </style>

@@ -17,8 +17,23 @@ const backgrounds = reactive([
     {src: '/images/background/bgr5.jpeg', title: 'грустный фон 5'},
     {src: '/images/background/bgr6.jpeg', title: 'грустный фон 6'},
 ])
+
+const canvasOption = reactive({
+    width: 800,
+    height: 600,
+    backgroundColor : "#fff",
+    backgroundImg: null
+})
 function updateCanvas(canvas) {
+    const bgrImage = canvas.backgroundImage
     canvas.clear();
+
+      canvas.setWidth(canvasOption.width);
+      canvas.setHeight(canvasOption.height);
+      canvas.backgroundColor = canvasOption.backgroundColor;
+      // canvas.setBackgroundImage(canvasOption.backgroundImg);
+      canvas.setBackgroundImage(bgrImage);
+
     layers.forEach((obj, index) => {
      obj.layer.clone((cl) => {
       cl.scaleToHeight(50, { aspectRatio: cl.width / cl.height });
@@ -70,5 +85,5 @@ function moveLayerDown(id, canvas) {
 
 
 
-return { layers, backgrounds, findIndexLayerById, updateCanvas, removeSelectedObject, moveLayerUp, moveLayerDown }
+return { layers, backgrounds, canvasOption, findIndexLayerById, updateCanvas, removeSelectedObject, moveLayerUp, moveLayerDown }
 })

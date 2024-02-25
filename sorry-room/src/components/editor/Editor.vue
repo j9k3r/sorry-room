@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { fabric } from 'fabric-all-modules';
-import {onMounted, reactive, ref} from "vue";
+import {onMounted, reactive, ref, watch} from "vue";
 import {useEditorStore} from "@/stores/editor";
 import Layers from "@/components/editor/Layers.vue";
 import Tools from "@/components/editor/Tools.vue";
@@ -14,8 +14,9 @@ const editorStore = useEditorStore();
 // Ваш код onMounted
 onMounted(() => {
   fabricWrap.canvas = new fabric.Canvas('canvas', {
-    width: 800,
-    height: 600
+    width: editorStore.canvasOption.width,
+    height: editorStore.canvasOption.height,
+    backgroundColor : "#fff",
   });
 
   // const imageUrl = 'https://profil.mos.ru/images/banners/bottom/dit-banner.jpg';
@@ -63,7 +64,16 @@ onMounted(() => {
 //   image.src = url;
 // }
 
+  watch(() => editorStore.canvasOption, (state) => {
+    // console.log(state)
+    // fabricWrap.canvas.backgroundColor = editorStore.canvasOption.backgroundColor
 
+    fabricWrap.canvas.setWidth(state.width)
+    fabricWrap.canvas.setHeight(state.height)
+    fabricWrap.canvas.backgroundColor = state.backgroundColor
+    // fabricWrap.canvas.setBackgroundImage(state.backgroundImg);
+    fabricWrap.canvas.renderAll();
+  }, {deep: true}) //  гулбокий объект
 
 </script>
 
@@ -73,7 +83,9 @@ onMounted(() => {
     <tools :fabricWrap="fabricWrap"></tools>
   </header>
   <div class="body">
-    <canvas id="canvas"></canvas>
+    <div class="container">
+      <canvas id="canvas"></canvas>
+    </div>
     <layers :fabricWrap="fabricWrap"></layers>
   </div>
   <footer></footer>
@@ -81,5 +93,9 @@ onMounted(() => {
 </template>
 
 <style scoped>
-
+.container {
+  width: 800px; /* Фиксированная ширина контейнера */
+  height: 600px; /* Фиксированная высота контейнера */
+  overflow: auto; /* Добавление прокрутки в случае необходимости */
+}
 </style>

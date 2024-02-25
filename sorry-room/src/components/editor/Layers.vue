@@ -47,10 +47,20 @@ function convertToBase64(svgString) {
 function setBackgroundImage(image, canvas) {
   fabric.Image.fromURL(image, function(img) {
     // Устанавливаем размер изображения равным размеру Canvas
-    img.scaleToWidth(canvas.width);
-    img.scaleToHeight(canvas.height);
+    // img.scaleToWidth(canvas.width);
+    // img.scaleToHeight(canvas.height);
+
+    editorStore.canvasOption.width = img.width;
+    editorStore.canvasOption.height = img.height;
     // Добавляем изображение в Canvas в качестве заднего фона
     canvas.setBackgroundImage(img, canvas.renderAll.bind(canvas));
+    // editorStore.canvasOption.backgroundImg = img
+
+      // const backgroundImage = canvas.backgroundImage;
+      // const width = backgroundImage.width;
+      // const height = backgroundImage.height;
+      // console.log('Ширина изображения:', width);
+      // console.log('Высота изображения:', height);
   });
 }
 

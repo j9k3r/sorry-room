@@ -130,7 +130,8 @@ function uploadImage(e) {
                  </v-icon>
                </template>
                 <template v-slot:subtitle>
-                  {{ item.desc }}
+                  <v-text-field label="Layer Name" v-model="editorStore.layers[editorStore.findIndexLayerById(item.id)].desc"></v-text-field>
+<!--                  {{ item.desc }}-->
                 </template>
               </v-list-item>
             </v-card>
@@ -163,7 +164,8 @@ function uploadImage(e) {
                </v-icon>
              </template>
               <template v-slot:subtitle>
-                {{ item.title }}
+                <v-text-field label="Layer Name" v-model="editorStore.backgrounds[index].title"></v-text-field>
+<!--                {{ item.title }}-->
               </template>
             </v-list-item>
           </v-card>

@@ -93,6 +93,10 @@ onMounted(() => {
 </template>
 
 <style scoped>
+.body {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
 .container {
   width: 800px; /* Фиксированная ширина контейнера */
   height: 600px; /* Фиксированная высота контейнера */

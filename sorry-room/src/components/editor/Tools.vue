@@ -22,9 +22,37 @@ const changeAction = (target) => {
 
 <template>
 <section class="controls">
-  <button id="select" type="button" @click="changeAction('select')">select</button>
-  <button id="erase" type="button" @click="changeAction('erase')">erase</button>
-  <button id="delete" type="button" @click="editorStore.removeSelectedObject(props.fabricWrap.canvas)">delete selected</button>
+  <v-toolbar>
+  <!--    <template v-slot:prepend>-->
+  <!--      <v-btn icon="mdi-arrow-left"></v-btn>-->
+  <!--    </template>-->
+
+  <v-btn icon="mdi-mouse-left-click" @click="changeAction('select')"></v-btn>
+
+  <v-btn icon="mdi-eraser" @click="changeAction('erase')"></v-btn>
+
+  <v-btn icon="mdi-delete-outline" @click="editorStore.removeSelectedObject(props.fabricWrap.canvas)"></v-btn>
+
+  <template v-if="$vuetify.display.smAndUp">
+    <v-divider
+      class="mx-3 align-self-center"
+      length="24"
+      thickness="2"
+      vertical
+    ></v-divider>
+
+    <v-btn icon="mdi-folder-outline"></v-btn>
+
+    <v-btn icon="mdi-tag-outline"></v-btn>
+
+    <v-btn icon="mdi-dots-vertical"></v-btn>
+  </template>
+  </v-toolbar>
+
+
+<!--  <button id="select" type="button" @click="changeAction('select')">select</button>-->
+<!--  <button id="erase" type="button" @click="changeAction('erase')">erase</button>-->
+<!--  <button id="delete" type="button" @click="editorStore.removeSelectedObject(props.fabricWrap.canvas)">delete selected</button>-->
 </section>
 </template>
 

@@ -23,6 +23,8 @@ const backgrounds = reactive([
     {src: '/images/background/bgr6.jpeg', title: 'грустный фон 6'},
 ])
 
+const selectedBackground = ref(-1)
+
 const canvasOption = reactive({
     width: 800,
     height: 600,
@@ -90,17 +92,5 @@ function moveLayerDown(id, canvas) {
     }
 }
 
-function filterBlockedLayer(canvas) {
-    const selectedObject = canvas.getActiveObject();
-    if (selectedObject) {
-        // const index = layers.indexOf(selectedObject);
-        const index = layers.findIndex((item) => item.layer === selectedObject);
-
-        const erasible = !layers[index].layer.get('erasable')
-        const selectable = layers[index].layer.set('erasable', erasible)
-        console.log(selectable)
-    }
-}
-
-return { layers, backgrounds, canvasOption, selectedLayerIndex, findIndexLayerById, findIndexLayerByObject,  updateCanvas, removeSelectedObject, moveLayerUp, moveLayerDown, filterBlockedLayer }
+return { layers, selectedLayerIndex, backgrounds, selectedBackground, canvasOption, findIndexLayerById, findIndexLayerByObject,  updateCanvas, removeSelectedObject, moveLayerUp, moveLayerDown }
 })

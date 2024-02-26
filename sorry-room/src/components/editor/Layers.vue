@@ -15,6 +15,8 @@ const layersReverse = computed(() => {
 
 const tab = ref()
 const backgroundFileInput = ref(null)
+const model = ref()
+
 function selectLayer(id) {
     const index = editorStore.findIndexLayerById(id)
     props.fabricWrap.canvas.discardActiveObject();
@@ -44,7 +46,7 @@ function convertToBase64(svgString) {
   }
 }
 
-function setBackgroundImage(image, canvas) {
+function setBackgroundImage(image, canvas, index) {
   fabric.Image.fromURL(image, function(img) {
     // Устанавливаем размер изображения равным размеру Canvas
     // img.scaleToWidth(canvas.width);
@@ -54,6 +56,7 @@ function setBackgroundImage(image, canvas) {
     editorStore.canvasOption.height = img.height;
     // Добавляем изображение в Canvas в качестве заднего фона
     canvas.setBackgroundImage(img, canvas.renderAll.bind(canvas));
+    editorStore.selectedBackground = index
     // editorStore.canvasOption.backgroundImg = img
 
       // const backgroundImage = canvas.backgroundImage;
@@ -83,12 +86,14 @@ function uploadImage(e) {
 
 <template>
 
-<v-card>
+<v-card
+    class="mx-auto"
+    max-width="400">
     <v-tabs
       v-model="tab"
       bg-color="primary"
     >
-      <v-tab value="one">Слои</v-tab>
+      <v-tab value="one">Layers</v-tab>
       <v-tab value="two">Background</v-tab>
       <v-tab value="three">Item Three</v-tab>
     </v-tabs>
@@ -98,10 +103,12 @@ function uploadImage(e) {
         <v-window-item value="one">
             <v-card
               class="mx-auto"
-              max-width="425"
+              max-width="400"
               v-for="(item, index) in layersReverse" :key="index"
             >
-              <v-list-item>
+              <v-list-item
+                  :class="editorStore.selectedLayerIndex === editorStore.findIndexLayerById(item.id) ? 'border' : ''"
+              >
                <template v-slot:title class="bg-cyan-darken-1">
                  <div>
                   index: {{ index }}, id: {{ item.id }}
@@ -152,7 +159,7 @@ function uploadImage(e) {
             max-width="425"
             v-for="(item, index) in editorStore.backgrounds" :key="index"
           >
-            <v-list-item>
+            <v-list-item :class="editorStore.selectedBackground === index ? 'border' : ''">
              <template v-slot:title class="bg-cyan-darken-1">
                <div>
                 index: {{ index }}
@@ -160,7 +167,7 @@ function uploadImage(e) {
              </template>
              <template v-slot:prepend>
                <v-icon>
-                  <img :src="item.src" width="50px" @click="setBackgroundImage(item.src, props.fabricWrap.canvas)">
+                  <img :src="item.src" width="50px" @click="setBackgroundImage(item.src, props.fabricWrap.canvas, index)">
                </v-icon>
              </template>
               <template v-slot:subtitle>
@@ -187,6 +194,10 @@ function uploadImage(e) {
 .v-list-item-title {
   display: flex !important;
   justify-content: space-between !important;
+}
+
+.border {
+  border: 2px dashed orange !important;
 }
 
 </style>

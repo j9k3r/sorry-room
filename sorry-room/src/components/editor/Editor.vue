@@ -36,32 +36,26 @@ onMounted(() => {
   // editorStore.layers.push(rect);
   editorStore.updateCanvas(fabricWrap.canvas); // обновляем canvas после добавления прямоугольника
 
-  // fabricWrap.canvas.on('selection:created', function(e) {
-  //   console.log('Объекты были выделены');
-  //   var selectedObject = e.target;
-  //   console.log(e)
-  //   // Далее вам может потребоваться выполнить нужные вам действия с выделенными объектами
-  // });
-
   fabricWrap.canvas.on('selection:created', function(e) {
     const selectedObjects = e.selected;
-    console.log('Объекты в выделении созданы', selectedObjects);
+    const indexSelectedObject = editorStore.findIndexLayerByObject(selectedObjects[0])
+    editorStore.selectedLayerIndex = indexSelectedObject
+    // console.log('Объекты в выделении созданы', selectedObjects);
   });
 
   fabricWrap.canvas.on('selection:updated', function(e) {
     const selectedObjects = e.selected;
     const indexSelectedObject = editorStore.findIndexLayerByObject(selectedObjects[0])
-
     editorStore.selectedLayerIndex = indexSelectedObject
-    console.log(indexSelectedObject)
+    // console.log(indexSelectedObject)
     // console.log('Объекты в выделении', selectedObjects[0]);
 
   });
 
   fabricWrap.canvas.on('selection:cleared', function(e) {
     editorStore.selectedLayerIndex = -1
-    const selectedObjects = e.selected;
-    console.log('Объекты в выделении очищены', selectedObjects);
+    // const selectedObjects = e.selected;
+    // console.log('Объекты в выделении очищены', selectedObjects);
   });
 
 });
@@ -128,12 +122,17 @@ onMounted(() => {
 </template>
 
 <style scoped>
+header {
+  display: grid;
+  grid-template-columns: 1fr;
+  width: 1200px;
+}
 .body {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 2fr 1fr;
 }
 .container {
-  width: 800px; /* Фиксированная ширина контейнера */
+  width: 600px; /* Фиксированная ширина контейнера */
   height: 600px; /* Фиксированная высота контейнера */
   overflow: auto; /* Добавление прокрутки в случае необходимости */
 }

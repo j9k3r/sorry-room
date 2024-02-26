@@ -25,6 +25,13 @@ const backgrounds = reactive([
 
 const selectedBackground = ref(-1)
 
+const layerTemplate = reactive([
+    {src: '/images/template/templ1.png', title: 'шаблон 1'},
+    {src: '/images/template/templ2.png', title: 'шаблон 2'},
+    {src: '/images/template/templ3.png', title: 'шаблон 3'},
+    {src: '/images/template/templ4.png', title: 'шаблон 4'},
+])
+
 const canvasOption = reactive({
     width: 800,
     height: 600,
@@ -92,5 +99,5 @@ function moveLayerDown(id, canvas) {
     }
 }
 
-return { layers, selectedLayerIndex, backgrounds, selectedBackground, canvasOption, findIndexLayerById, findIndexLayerByObject,  updateCanvas, removeSelectedObject, moveLayerUp, moveLayerDown }
+return { layers, selectedLayerIndex, backgrounds, selectedBackground, layerTemplate, canvasOption, findIndexLayerById, findIndexLayerByObject,  updateCanvas, removeSelectedObject, moveLayerUp, moveLayerDown }
 })

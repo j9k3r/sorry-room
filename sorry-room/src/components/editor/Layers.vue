@@ -15,6 +15,7 @@ const layersReverse = computed(() => {
 
 const tab = ref()
 const backgroundFileInput = ref(null)
+const templateFileInput = ref(null)
 const model = ref()
 
 function selectLayer(id) {
@@ -67,19 +68,38 @@ function setBackgroundImage(image, canvas, index) {
   });
 }
 
-function uploadImage(e) {
+function uploadImage(e, type) {
   const file = e.target.files[0];
   const reader = new FileReader();
 
   reader.onload = function (event) {
     const imgUrl = event.target.result;
-    const newBackground = { src: imgUrl, title: 'Новый фон' };
-    editorStore.backgrounds.push(newBackground);
-    // e.target.value = null
-    backgroundFileInput.value.reset();
+
+    if (type === 'background') {
+      const newBackground = {src: imgUrl, title: 'Новый фон'};
+      editorStore.backgrounds.push(newBackground);
+      // e.target.value = null
+      backgroundFileInput.value.reset();
+    }
+
+    if (type === 'template') {
+      const newTemplate = {src: imgUrl, title: 'Новый шаблон'};
+      editorStore.layerTemplate.push(newTemplate);
+      templateFileInput.value.reset();
+    }
   };
 
   reader.readAsDataURL(file);
+}
+
+function addTemplateToCanvas(imageUrl, title) {
+  fabric.Image.fromURL(imageUrl, (img) => {
+    img.scale(0.5); // Масштабируем изображение
+    // props.fabricWrap.canvas.add(img); // Добавляем изображение на холст
+    const obj = {layer: img, desc: title}
+    editorStore.layers.push(obj);
+    editorStore.updateCanvas(props.fabricWrap.canvas);
+  });
 }
 
 </script>
@@ -95,7 +115,7 @@ function uploadImage(e) {
     >
       <v-tab value="one">Layers</v-tab>
       <v-tab value="two">Background</v-tab>
-      <v-tab value="three">Item Three</v-tab>
+      <v-tab value="three">Templates</v-tab>
     </v-tabs>
 
     <v-card-text>
@@ -152,7 +172,7 @@ function uploadImage(e) {
             placeholder="Select your file"
             accept="image/png, image/jpeg, image/bmp"
             density="compact"
-            @change="uploadImage"
+            @change="uploadImage($event, 'background')"
           ></v-file-input>
           <v-card
             class="mx-auto"
@@ -179,7 +199,36 @@ function uploadImage(e) {
         </v-window-item>
 
         <v-window-item value="three">
-          Three
+          <v-file-input
+              ref="templateFileInput"
+              label="Add template file"
+              placeholder="Select your file"
+              accept="image/png, image/jpeg, image/bmp"
+              density="compact"
+              @change="uploadImage($event, 'template')"
+          ></v-file-input>
+          <v-card
+            class="mx-auto"
+            max-width="425"
+            v-for="(item, index) in editorStore.layerTemplate" :key="index"
+          >
+            <v-list-item>
+             <template v-slot:title class="bg-cyan-darken-1">
+               <div>
+                index: {{ index }}
+               </div>
+             </template>
+             <template v-slot:prepend>
+               <v-icon>
+                  <img :src="item.src" width="50px" @click="addTemplateToCanvas(item.src, item.title)">
+               </v-icon>
+             </template>
+              <template v-slot:subtitle>
+                <v-text-field label="Template Name" v-model="editorStore.layerTemplate[index].title"></v-text-field>
+<!--                {{ item.title }}-->
+              </template>
+            </v-list-item>
+          </v-card>
         </v-window-item>
       </v-window>
     </v-card-text>

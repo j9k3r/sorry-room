@@ -9,6 +9,11 @@ function findIndexLayerById(id: number) {
     return index;
 }
 
+function findIndexLayerByObject(object) {
+    const index = layers.findIndex((item) => item.layer === object);
+    return index
+}
+
 const backgrounds = reactive([
     {src: '/images/background/bgr1.jpeg', title: 'грустный фон 1'},
     {src: '/images/background/bgr2.jpeg', title: 'грустный фон 2'},
@@ -24,6 +29,8 @@ const canvasOption = reactive({
     backgroundColor : "#fff",
     backgroundImg: null
 })
+
+const selectedLayerIndex = ref(-1)
 function updateCanvas(canvas) {
     const bgrImage = canvas.backgroundImage
     canvas.clear();
@@ -83,7 +90,17 @@ function moveLayerDown(id, canvas) {
     }
 }
 
+function filterBlockedLayer(canvas) {
+    const selectedObject = canvas.getActiveObject();
+    if (selectedObject) {
+        // const index = layers.indexOf(selectedObject);
+        const index = layers.findIndex((item) => item.layer === selectedObject);
 
+        const erasible = !layers[index].layer.get('erasable')
+        const selectable = layers[index].layer.set('erasable', erasible)
+        console.log(selectable)
+    }
+}
 
-return { layers, backgrounds, canvasOption, findIndexLayerById, updateCanvas, removeSelectedObject, moveLayerUp, moveLayerDown }
+return { layers, backgrounds, canvasOption, selectedLayerIndex, findIndexLayerById, findIndexLayerByObject,  updateCanvas, removeSelectedObject, moveLayerUp, moveLayerDown, filterBlockedLayer }
 })

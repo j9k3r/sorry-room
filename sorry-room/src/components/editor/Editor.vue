@@ -4,6 +4,7 @@ import {onMounted, reactive, ref, watch} from "vue";
 import {useEditorStore} from "@/stores/editor";
 import Layers from "@/components/editor/Layers.vue";
 import Tools from "@/components/editor/Tools.vue";
+import LayerFilters from "@/components/editor/LayerFilters.vue";
 
 const fabricWrap = {
   canvas: null,
@@ -34,6 +35,35 @@ onMounted(() => {
   editorStore.layers.push(ob);
   // editorStore.layers.push(rect);
   editorStore.updateCanvas(fabricWrap.canvas); // обновляем canvas после добавления прямоугольника
+
+  // fabricWrap.canvas.on('selection:created', function(e) {
+  //   console.log('Объекты были выделены');
+  //   var selectedObject = e.target;
+  //   console.log(e)
+  //   // Далее вам может потребоваться выполнить нужные вам действия с выделенными объектами
+  // });
+
+  fabricWrap.canvas.on('selection:created', function(e) {
+    const selectedObjects = e.selected;
+    console.log('Объекты в выделении созданы', selectedObjects);
+  });
+
+  fabricWrap.canvas.on('selection:updated', function(e) {
+    const selectedObjects = e.selected;
+    const indexSelectedObject = editorStore.findIndexLayerByObject(selectedObjects[0])
+
+    editorStore.selectedLayerIndex = indexSelectedObject
+    console.log(indexSelectedObject)
+    // console.log('Объекты в выделении', selectedObjects[0]);
+
+  });
+
+  fabricWrap.canvas.on('selection:cleared', function(e) {
+    editorStore.selectedLayerIndex = -1
+    const selectedObjects = e.selected;
+    console.log('Объекты в выделении очищены', selectedObjects);
+  });
+
 });
 
 
@@ -75,6 +105,8 @@ onMounted(() => {
     fabricWrap.canvas.renderAll();
   }, {deep: true}) //  гулбокий объект
 
+
+
 </script>
 
 <template>
@@ -86,7 +118,10 @@ onMounted(() => {
     <div class="container">
       <canvas id="canvas"></canvas>
     </div>
-    <layers :fabricWrap="fabricWrap"></layers>
+    <div class="layer-group">
+      <layer-filters :fabricWrap="fabricWrap"></layer-filters>
+      <layers :fabricWrap="fabricWrap"></layers>
+    </div>
   </div>
   <footer></footer>
 </section>

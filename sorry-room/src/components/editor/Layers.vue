@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup lang="ts" async>
 import {useEditorStore} from "@/stores/editor";
 import {computed, ref} from "vue";
 import {fabric} from "fabric-all-modules";
@@ -164,7 +164,7 @@ function uploadImage(e) {
                </v-icon>
              </template>
               <template v-slot:subtitle>
-                <v-text-field label="Layer Name" v-model="editorStore.backgrounds[index].title"></v-text-field>
+                <v-text-field label="Background Name" v-model="editorStore.backgrounds[index].title"></v-text-field>
 <!--                {{ item.title }}-->
               </template>
             </v-list-item>

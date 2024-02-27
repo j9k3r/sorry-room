@@ -17,9 +17,9 @@
   "dependencies": {
     "fabric-all-modules": "^5.3.0",
     "pinia": "^2.1.7",
-    "vue": "^3.4.15",
+    "vue": "3.4.10",
     "vue-router": "^4.2.5",
-    "vuetify": "^3.5.5"
+    "vuetify": "^3.5.6"
   },
   "devDependencies": {
     "@mdi/font": "^7.4.47",

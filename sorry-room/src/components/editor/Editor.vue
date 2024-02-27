@@ -12,7 +12,6 @@ const fabricWrap = {
 
 const editorStore = useEditorStore();
 
-// Ваш код onMounted
 onMounted(() => {
   fabricWrap.canvas = new fabric.Canvas('canvas', {
     width: editorStore.canvasOption.width,

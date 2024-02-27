@@ -107,7 +107,8 @@ function addText() {
     left: 100,
     top: 100,
     fontSize: 20,
-    fontFamily: 'Arial'
+    fontFamily: 'Arial',
+    fill: 'black'
   });
   const textWrap = { layer: sampleText, desc: 'new text'}
   editorStore.layers.push(textWrap);

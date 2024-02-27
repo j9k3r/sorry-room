@@ -9,6 +9,11 @@ const props = defineProps({
 const editorStore = useEditorStore();
 
 const open = ref([])
+
+const fonts = ['Arial', 'Verdana', 'Tahoma', 'Times New Roman', 'Courier New', 'Georgia']
+const fontsWeight = ['bold', 'normal', '400', '600', '800']
+const fontsStyle = ['normal', 'italic', 'oblique']
+
 // const activeFilters = ref(false)
 // const activeText = ref(false)
 function getAct() {
@@ -33,6 +38,52 @@ const FilterBlockedLayer = computed({
     editorStore.layers[editorStore.selectedLayerIndex].layer.set('erasable', value)
   }
 });
+
+
+const filterTextFont = computed({
+  get: () => {
+    if (editorStore.selectedLayerIndex !== -1) {
+    return editorStore.layers[editorStore.selectedLayerIndex].layer.get('fontFamily')
+    } else return false
+  },
+  set: (value) => {
+    editorStore.layers[editorStore.selectedLayerIndex].layer.set('fontFamily', value)
+  }
+});
+
+const filterTextColor = computed({
+  get: () => {
+    if (editorStore.selectedLayerIndex !== -1) {
+    return editorStore.layers[editorStore.selectedLayerIndex].layer.get('fill')
+    } else return false
+  },
+  set: (value) => {
+    editorStore.layers[editorStore.selectedLayerIndex].layer.set('fill', value)
+  }
+});
+
+const filterTextFontWeight = computed({
+  get: () => {
+    if (editorStore.selectedLayerIndex !== -1) {
+    return editorStore.layers[editorStore.selectedLayerIndex].layer.get('fontWeight')
+    } else return false
+  },
+  set: (value) => {
+    editorStore.layers[editorStore.selectedLayerIndex].layer.set('fontWeight', value)
+  }
+});
+
+const filterTextFontStyle = computed({
+  get: () => {
+    if (editorStore.selectedLayerIndex !== -1) {
+    return editorStore.layers[editorStore.selectedLayerIndex].layer.get('fontStyle')
+    } else return false
+  },
+  set: (value) => {
+    editorStore.layers[editorStore.selectedLayerIndex].layer.set('fontStyle', value)
+  }
+});
+
 </script>
 
 <template>
@@ -92,23 +143,28 @@ const FilterBlockedLayer = computed({
         <template v-slot:activator="{ props }">
           <v-list-item
             v-bind="props"
-            prepend-icon="mdi-filter-settings-outline"
+            prepend-icon="mdi-script-text-key-outline"
             title="Text filter"
           ></v-list-item>
         </template>
-          <v-list-item value="widgets">
-        <template v-slot:prepend="{ isActive }">
-          <v-list-item-action start>
-            <v-checkbox-btn :model-value="isActive"></v-checkbox-btn>
-          </v-list-item-action>
-        </template>
+        <v-select
+          label="Font"
+          v-model="filterTextFont"
+          :items="fonts"
+        ></v-select>
+        <v-select
+          label="Font Style"
+          v-model="filterTextFontStyle"
+          :items="fontsStyle"
+        ></v-select>
+        <v-select
+          label="Font Weight"
+          v-model="filterTextFontWeight"
+          :items="fontsWeight"
+        ></v-select>
+        <v-text-field label="Color" v-model="filterTextColor"></v-text-field>
 
-        <v-list-item-title>Auto-add widgets</v-list-item-title>
 
-        <v-list-item-subtitle>
-          Automatically add home screen widgets when downloads complete
-        </v-list-item-subtitle>
-      </v-list-item>
       </v-list-group>
 
 

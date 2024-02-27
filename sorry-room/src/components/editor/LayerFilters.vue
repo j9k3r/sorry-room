@@ -9,6 +9,8 @@ const props = defineProps({
 const editorStore = useEditorStore();
 
 const open = ref([])
+// const activeFilters = ref(false)
+// const activeText = ref(false)
 function getAct() {
   // const obj = props.fabricWrap.canvas.getActiveObject();
   // console.log(obj)
@@ -63,7 +65,6 @@ const FilterBlockedLayer = computed({
         <v-list-item-title>Blocked layer</v-list-item-title>
       </v-list-item>
 
-<!--      <v-list v-model:opened="open">-->
       <v-list-group value="Filters">
         <template v-slot:activator="{ props }">
           <v-list-item
@@ -72,9 +73,7 @@ const FilterBlockedLayer = computed({
             title="Filters"
           ></v-list-item>
         </template>
-
-<!--        <v-list-group value="Admin">-->
-          <v-list-item value="sound">
+        <v-list-item value="sound">
             <template v-slot:prepend="{ isActive }">
               <v-list-item-action start>
                 <v-checkbox-btn :model-value="isActive"></v-checkbox-btn>
@@ -86,7 +85,17 @@ const FilterBlockedLayer = computed({
             <v-list-item-subtitle>
               Auto-update apps at any time. Data charges may apply
             </v-list-item-subtitle>
-          </v-list-item>
+      </v-list-item>
+      </v-list-group>
+
+      <v-list-group value="Text">
+        <template v-slot:activator="{ props }">
+          <v-list-item
+            v-bind="props"
+            prepend-icon="mdi-filter-settings-outline"
+            title="Text filter"
+          ></v-list-item>
+        </template>
           <v-list-item value="widgets">
         <template v-slot:prepend="{ isActive }">
           <v-list-item-action start>
@@ -100,8 +109,9 @@ const FilterBlockedLayer = computed({
           Automatically add home screen widgets when downloads complete
         </v-list-item-subtitle>
       </v-list-item>
-<!--        </v-list-group>-->
       </v-list-group>
+
+
     </v-list>
   </v-card>
 </section>

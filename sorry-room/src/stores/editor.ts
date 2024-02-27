@@ -49,18 +49,22 @@ function updateCanvas(canvas) {
       canvas.backgroundColor = canvasOption.backgroundColor;
       // canvas.setBackgroundImage(canvasOption.backgroundImg);
       canvas.setBackgroundImage(bgrImage);
-
     layers.forEach((obj, index) => {
      obj.layer.clone((cl) => {
-      cl.scaleToHeight(50, { aspectRatio: cl.width / cl.height });
-      const box = cl.getBoundingRect(true);
-      const xOffset = (50 - box.width) / 2 - box.left;
-      const yOffset = (50 - box.height) / 2 - box.top;
-      cl.set({ left: cl.left + xOffset, top: cl.top + yOffset });
-      const svg = cl.toSVG();
-        layers[index].cloned = svg;
-      })
-      canvas.add(obj.layer);
+     if (cl.text !== undefined) {
+         // cl.scaleToHeight(25);
+         cl.set({left: 0, top: 0, fontSize: 10});
+     } else {
+         cl.scaleToHeight(50, {aspectRatio: cl.width / cl.height});
+         const box = cl.getBoundingRect(true);
+         const xOffset = (50 - box.width) / 2 - box.left;
+         const yOffset = (50 - box.height) / 2 - box.top;
+         cl.set({left: cl.left + xOffset, top: cl.top + yOffset});
+     }
+         const svg = cl.toSVG();
+         layers[index].cloned = svg;
+     })
+     canvas.add(obj.layer);
      if (obj.id === undefined) {
          layers[index].id = index
      }

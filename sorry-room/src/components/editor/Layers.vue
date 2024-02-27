@@ -102,6 +102,18 @@ function addTemplateToCanvas(imageUrl, title) {
   });
 }
 
+function addText() {
+  const sampleText = new fabric.Textbox('example', {
+    left: 100,
+    top: 100,
+    fontSize: 20,
+    fontFamily: 'Arial'
+  });
+  const textWrap = { layer: sampleText, desc: 'new text'}
+  editorStore.layers.push(textWrap);
+  editorStore.updateCanvas(props.fabricWrap.canvas);
+}
+
 </script>
 
 <template>
@@ -207,6 +219,9 @@ function addTemplateToCanvas(imageUrl, title) {
               density="compact"
               @change="uploadImage($event, 'template')"
           ></v-file-input>
+          <v-toolbar>
+            <v-btn icon="mdi-format-text" @click="addText"></v-btn>
+          </v-toolbar>
           <v-card
             class="mx-auto"
             max-width="425"

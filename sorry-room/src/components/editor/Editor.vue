@@ -36,11 +36,22 @@ onMounted(() => {
   // editorStore.layers.push(rect);
   editorStore.updateCanvas(fabricWrap.canvas); // обновляем canvas после добавления прямоугольника
 
+  // let font = new fabricWrap.canvas.Font('Ubuntu','/fonts/Ubuntu-Regular.ttf');
+  // font.addFace('/fonts/Ubuntu-Bold.ttf', 'bold');
+  // font.addFace('/fonts/Ubuntu-Italic.ttf', 'normal', 'italic');
+  // font.addFace('/fonts/Ubuntu-BoldItalic.ttf', 'bold', 'italic');
+  // fabricWrap.canvas.contextContainer.addFont(font)
+
+  // var fonts = ["Pacifico", "VT323", "Quicksand", "Inconsolata"];
+
+
+
   fabricWrap.canvas.on('selection:created', function(e) {
     const selectedObjects = e.selected;
     const indexSelectedObject = editorStore.findIndexLayerByObject(selectedObjects[0])
     editorStore.selectedLayerIndex = indexSelectedObject
     // console.log('Объекты в выделении созданы', selectedObjects);
+    // console.log(selectedObjects[0])
   });
 
   fabricWrap.canvas.on('selection:updated', function(e) {

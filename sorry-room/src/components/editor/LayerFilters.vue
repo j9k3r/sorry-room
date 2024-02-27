@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import {useEditorStore} from "@/stores/editor";
 import {computed, onMounted, ref, watch} from "vue";
+import { fabric } from 'fabric-all-modules';
 
 const props = defineProps({
   fabricWrap: Object,
@@ -10,6 +11,7 @@ const editorStore = useEditorStore();
 
 const open = ref([])
 
+const filters = ['grayscale',  'sepia', 'brownie', 'vintage', 'kodachrome', 'technicolor', 'polaroid']
 const fonts = ['Arial', 'Verdana', 'Tahoma', 'Times New Roman', 'Courier New', 'Georgia']
 const fontsWeight = ['bold', 'normal', '400', '600', '800']
 const fontsStyle = ['normal', 'italic', 'oblique']
@@ -39,6 +41,45 @@ const FilterBlockedLayer = computed({
   }
 });
 
+const appliedFilters = computed({
+  get: () => {
+    if (editorStore.selectedLayerIndex !== -1) {
+    const activeFilters = editorStore.layers[editorStore.selectedLayerIndex].layer.filters
+    let arrActiveNameFilter = []
+    activeFilters.forEach((element) => arrActiveNameFilter.push(element.type.toLowerCase()))
+    return arrActiveNameFilter
+    } else return []
+  },
+  set: (value) => {
+    editorStore.layers[editorStore.selectedLayerIndex].layer.filters = []
+    value.forEach(filterName => {
+      switch (filterName) {
+        case "brownie":
+          editorStore.layers[editorStore.selectedLayerIndex].layer.filters.push(new fabric.Image.filters.Brownie())
+          break;
+        case "sepia":
+          editorStore.layers[editorStore.selectedLayerIndex].layer.filters.push(new fabric.Image.filters.Sepia());
+          break;
+        case "vintage":
+          editorStore.layers[editorStore.selectedLayerIndex].layer.filters.push(new fabric.Image.filters.Vintage())
+          break;
+        case "technicolor":
+          editorStore.layers[editorStore.selectedLayerIndex].layer.filters.push(new fabric.Image.filters.Technicolor())
+          break;
+        case "polaroid":
+          editorStore.layers[editorStore.selectedLayerIndex].layer.filters.push(new fabric.Image.filters.Polaroid())
+          break;
+        case "kodachrome":
+          editorStore.layers[editorStore.selectedLayerIndex].layer.filters.push(new fabric.Image.filters.Kodachrome())
+          break;
+        case "grayscale":
+          editorStore.layers[editorStore.selectedLayerIndex].layer.filters.push(new fabric.Image.filters.Grayscale())
+          break;
+      }
+    })
+    editorStore.layers[editorStore.selectedLayerIndex].layer.applyFilters()
+  }
+});
 
 const filterTextFont = computed({
   get: () => {
@@ -124,19 +165,13 @@ const filterTextFontStyle = computed({
             title="Filters"
           ></v-list-item>
         </template>
-        <v-list-item value="sound">
-            <template v-slot:prepend="{ isActive }">
-              <v-list-item-action start>
-                <v-checkbox-btn :model-value="isActive"></v-checkbox-btn>
-              </v-list-item-action>
-            </template>
-
-            <v-list-item-title>Sound</v-list-item-title>
-
-            <v-list-item-subtitle>
-              Auto-update apps at any time. Data charges may apply
-            </v-list-item-subtitle>
-      </v-list-item>
+          <v-select
+            :items="filters"
+            v-model="appliedFilters"
+            label="filters"
+            multiple
+            chips
+          ></v-select>
       </v-list-group>
 
       <v-list-group value="Text">
@@ -163,11 +198,7 @@ const filterTextFontStyle = computed({
           :items="fontsWeight"
         ></v-select>
         <v-text-field label="Color" v-model="filterTextColor"></v-text-field>
-
-
       </v-list-group>
-
-
     </v-list>
   </v-card>
 </section>

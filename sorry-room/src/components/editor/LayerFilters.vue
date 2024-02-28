@@ -46,37 +46,43 @@ const appliedFilters = computed({
     if (editorStore.selectedLayerIndex !== -1) {
     const activeFilters = editorStore.layers[editorStore.selectedLayerIndex].layer.filters
     let arrActiveNameFilter = []
-    activeFilters.forEach((element) => arrActiveNameFilter.push(element.type.toLowerCase()))
+    // console.log(activeFilters)
+    if (activeFilters !== undefined && activeFilters.length > 0 ) {
+      activeFilters.forEach((element) => arrActiveNameFilter.push(element.type.toLowerCase()))
+    }
     return arrActiveNameFilter
     } else return []
   },
   set: (value) => {
     editorStore.layers[editorStore.selectedLayerIndex].layer.filters = []
-    value.forEach(filterName => {
-      switch (filterName) {
-        case "brownie":
-          editorStore.layers[editorStore.selectedLayerIndex].layer.filters.push(new fabric.Image.filters.Brownie())
-          break;
-        case "sepia":
-          editorStore.layers[editorStore.selectedLayerIndex].layer.filters.push(new fabric.Image.filters.Sepia());
-          break;
-        case "vintage":
-          editorStore.layers[editorStore.selectedLayerIndex].layer.filters.push(new fabric.Image.filters.Vintage())
-          break;
-        case "technicolor":
-          editorStore.layers[editorStore.selectedLayerIndex].layer.filters.push(new fabric.Image.filters.Technicolor())
-          break;
-        case "polaroid":
-          editorStore.layers[editorStore.selectedLayerIndex].layer.filters.push(new fabric.Image.filters.Polaroid())
-          break;
-        case "kodachrome":
-          editorStore.layers[editorStore.selectedLayerIndex].layer.filters.push(new fabric.Image.filters.Kodachrome())
-          break;
-        case "grayscale":
-          editorStore.layers[editorStore.selectedLayerIndex].layer.filters.push(new fabric.Image.filters.Grayscale())
-          break;
-      }
-    })
+    // if (editorStore.layers[editorStore.selectedLayerIndex].layer.text === undefined) {
+    if (value.length > 0) {
+      value.forEach(filterName => {
+        switch (filterName) {
+          case "brownie":
+            editorStore.layers[editorStore.selectedLayerIndex].layer.filters.push(new fabric.Image.filters.Brownie())
+            break;
+          case "sepia":
+            editorStore.layers[editorStore.selectedLayerIndex].layer.filters.push(new fabric.Image.filters.Sepia());
+            break;
+          case "vintage":
+            editorStore.layers[editorStore.selectedLayerIndex].layer.filters.push(new fabric.Image.filters.Vintage())
+            break;
+          case "technicolor":
+            editorStore.layers[editorStore.selectedLayerIndex].layer.filters.push(new fabric.Image.filters.Technicolor())
+            break;
+          case "polaroid":
+            editorStore.layers[editorStore.selectedLayerIndex].layer.filters.push(new fabric.Image.filters.Polaroid())
+            break;
+          case "kodachrome":
+            editorStore.layers[editorStore.selectedLayerIndex].layer.filters.push(new fabric.Image.filters.Kodachrome())
+            break;
+          case "grayscale":
+            editorStore.layers[editorStore.selectedLayerIndex].layer.filters.push(new fabric.Image.filters.Grayscale())
+            break;
+        }
+      })
+    }
     editorStore.layers[editorStore.selectedLayerIndex].layer.applyFilters()
   }
 });

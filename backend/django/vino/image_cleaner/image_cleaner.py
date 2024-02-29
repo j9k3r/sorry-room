@@ -148,7 +148,8 @@ class ImageCleaner:
         # for a in ax:
         #     a.axis("off")
 
-        OUTPUT_DIR = os.path.join(BASE_DIR, 'files/res')
+        # OUTPUT_DIR = os.path.join(BASE_DIR, 'files/res')
+        OUTPUT_DIR = os.path.join(BASE_DIR, 'static')
         os.makedirs(name=OUTPUT_DIR, exist_ok=True)
 
 
@@ -194,9 +195,10 @@ class ImageCleaner:
                 a.axis("off")
             plt.show()
 
+        image_url = f"/static/{image_src_name}_{current_time}.png"
         processed_data = {
             'message': 'Image processed successfully',
-            'image_url': 'https://example.com/processed_image.jpg'
+            'image_url': image_url
         }
 
         return processed_data

@@ -19,17 +19,23 @@ from django.urls import path
 
 from vino.views import OpVinoView
 
+from django.conf import settings
+from django.conf.urls.static import static
+
+from test_post_view import test_post_view
+
 # from ..vino import views
 # from ../vino/views import HelloWorldView
 
 urlpatterns = [
     path('', OpVinoView.as_view(), name='home'),
     path('person/', OpVinoView.as_view(), name='person'),
+    path('test/', test_post_view, name='test_post_view'),
 
 
     # path('admin/', admin.site.urls),
     # path('api/', include(router.urls)),
 
-]
+] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
 

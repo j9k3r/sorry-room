@@ -18,6 +18,16 @@ const changeAction = (target) => {
     props.fabricWrap.canvas.isDrawingMode = false;
   }
 }
+
+const downloadImage = () => {
+  const ext = "png";
+  const base64 = props.fabricWrap.canvas.toDataURL({ format: ext, enableRetinaScaling: true });
+  const link = document.createElement("a");
+  link.href = base64;
+  link.download = `example.${ext}`;
+  link.click();
+};
+
 </script>
 
 <template>
@@ -41,11 +51,7 @@ const changeAction = (target) => {
       vertical
     ></v-divider>
 
-    <v-btn icon="mdi-folder-outline"></v-btn>
-
-    <v-btn icon="mdi-tag-outline"></v-btn>
-
-    <v-btn icon="mdi-dots-vertical"></v-btn>
+    <v-btn icon="mdi-download" @click="downloadImage"></v-btn>
   </template>
   </v-toolbar>
 

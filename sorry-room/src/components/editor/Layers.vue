@@ -2,6 +2,7 @@
 import {useEditorStore} from "@/stores/editor";
 import {computed, ref} from "vue";
 import {fabric} from "fabric-all-modules";
+import imagesApi from "@/services/imagesApi";
 
 const props = defineProps({
   fabricWrap: Object
@@ -16,7 +17,19 @@ const layersReverse = computed(() => {
 const tab = ref()
 const backgroundFileInput = ref(null)
 const templateFileInput = ref(null)
-const model = ref()
+const removeBgrState = ref(false)
+const uploadImageState = ref(false)
+
+async function testPost() {
+  try {
+      const data = await imagesApi.testPost();
+      console.log(data);
+      // обработайте ответ здесь
+    } catch (error) {
+      console.log(error);
+      // обработайте ошибку здесь
+    }
+}
 
 function selectLayer(id) {
     const index = editorStore.findIndexLayerById(id)
@@ -68,28 +81,47 @@ function setBackgroundImage(image, canvas, index) {
   });
 }
 
-function uploadImage(e, type) {
-  const file = e.target.files[0];
-  const reader = new FileReader();
-
-  reader.onload = function (event) {
-    const imgUrl = event.target.result;
-
-    if (type === 'background') {
-      const newBackground = {src: imgUrl, title: 'Новый фон'};
-      editorStore.backgrounds.push(newBackground);
-      // e.target.value = null
-      backgroundFileInput.value.reset();
-    }
-
-    if (type === 'template') {
-      const newTemplate = {src: imgUrl, title: 'Новый шаблон'};
-      editorStore.layerTemplate.push(newTemplate);
+async function uploadImage(e, type) {
+  if (removeBgrState.value) {
+    uploadImageState.value = true
+    try {
+      const file = e.target.files[0];
+      const data = await imagesApi.removeBgrImage(file, type);
+      // console.log(data);
+      const imgUrl = 'http://localhost:8000/' + data.image_url
+      const newLayer = {src: imgUrl, title: 'Новый слой'};
+      // console.log( 'new layer', newLayer)
+      editorStore.layerTemplate.push(newLayer);
+      removeBgrState.value = false
+      uploadImageState.value = false
       templateFileInput.value.reset();
+    } catch (error) {
+      removeBgrState.value = false
+      uploadImageState.value = false
+      templateFileInput.value.reset();
+      console.log(error);
     }
-  };
+  } else {
+    const file = e.target.files[0];
+    const reader = new FileReader();
 
-  reader.readAsDataURL(file);
+    reader.onload = function (event) {
+      const imgUrl = event.target.result;
+
+      if (type === 'background') {
+        const newBackground = {src: imgUrl, title: 'Новый фон'};
+        editorStore.backgrounds.push(newBackground);
+        // e.target.value = null
+      }
+
+      if (type === 'template') {
+        const newTemplate = {src: imgUrl, title: 'Новый шаблон'};
+        editorStore.layerTemplate.push(newTemplate);
+      }
+    };
+    reader.readAsDataURL(file);
+  }
+  templateFileInput.value.reset();
 }
 
 function addTemplateToCanvas(imageUrl, title) {
@@ -134,6 +166,7 @@ function addText() {
     <v-card-text>
       <v-window v-model="tab">
         <v-window-item value="one">
+<!--          <v-btn icon="mdi-arrow-left" @click="testPost()"></v-btn>-->
             <v-card
               class="mx-auto"
               max-width="400"
@@ -219,9 +252,17 @@ function addText() {
               accept="image/png, image/jpeg, image/bmp"
               density="compact"
               @change="uploadImage($event, 'template')"
+              :disabled="uploadImageState"
           ></v-file-input>
           <v-toolbar>
             <v-btn icon="mdi-format-text" @click="addText"></v-btn>
+            <v-switch
+              v-model="removeBgrState"
+              label="remove background"
+              color="success"
+              hide-details
+              :disabled="uploadImageState"
+            ></v-switch>
           </v-toolbar>
           <v-card
             class="mx-auto"

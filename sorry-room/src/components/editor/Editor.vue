@@ -28,7 +28,7 @@ onMounted(() => {
     editorStore.layers.push(ob);
     editorStore.updateCanvas(fabricWrap.canvas); // обновляем canvas после добавления изображения
   });
-
+  // }, {crossOrigin: "Anonymous"});
   const rect = new fabric.Circle({ top: 10, left: 100, radius: 75, fill: "green", erasable: true });
   const ob = { layer: rect, desc: 'figure1'}
   editorStore.layers.push(ob);

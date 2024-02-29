@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import {fabric} from "fabric-all-modules";
 import {useEditorStore} from "@/stores/editor";
+import {ref} from "vue";
 
 const props = defineProps({
   fabricWrap: Object
@@ -8,10 +9,11 @@ const props = defineProps({
 
 const editorStore = useEditorStore();
 
+const range = ref(10)
 const changeAction = (target) => {
   if (target === 'erase') {
     props.fabricWrap.canvas.freeDrawingBrush = new fabric.EraserBrush(props.fabricWrap.canvas);
-    props.fabricWrap.canvas.freeDrawingBrush.width = 10;
+    props.fabricWrap.canvas.freeDrawingBrush.width = range.value;
     props.fabricWrap.canvas.isDrawingMode = true;
   }
   if (target === 'select') {
@@ -40,6 +42,14 @@ const downloadImage = () => {
   <v-btn icon="mdi-mouse-left-click" @click="changeAction('select')"></v-btn>
 
   <v-btn icon="mdi-eraser" @click="changeAction('erase')"></v-btn>
+    <v-col cols="2">
+      <v-select
+        v-model="range"
+        :items="[10,20,30,40,50,60]"
+        density="compact"
+        label="width"
+      ></v-select>
+    </v-col>
 
   <v-btn icon="mdi-delete-outline" @click="editorStore.removeSelectedObject(props.fabricWrap.canvas)"></v-btn>
 

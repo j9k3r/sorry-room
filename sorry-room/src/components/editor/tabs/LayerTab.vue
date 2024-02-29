@@ -3,6 +3,7 @@
 import imagesApi from "@/services/imagesApi";
 import {useEditorStore} from "@/stores/editor";
 import {computed} from "vue";
+import {fabric} from "fabric-all-modules";
 
 const props = defineProps({
   fabricWrap: Object
@@ -20,20 +21,33 @@ function selectLayer(id) {
     props.fabricWrap.canvas.requestRenderAll();
 }
 
-async function testPost() {
-  try {
-      const data = await imagesApi.testPost();
-      console.log(data);
-      // обработайте ответ здесь
-    } catch (error) {
-      console.log(error);
-      // обработайте ошибку здесь
-    }
-}
+// async function testPost() {
+//   try {
+//       const data = await imagesApi.testPost();
+//       console.log(data);
+//       // обработайте ответ здесь
+//     } catch (error) {
+//       console.log(error);
+//       // обработайте ошибку здесь
+//     }
+// }
+
+// function testImageToCanvas() {
+//   const imageUrl = 'http://localhost:8000/static/filipok_1709201626_258795.png'
+//   const title = '123'
+//     fabric.Image.fromURL(imageUrl, (img) => {
+//     img.scale(0.5); // Масштабируем изображение
+//     // props.fabricWrap.canvas.add(img); // Добавляем изображение на холст
+//     const obj = {layer: img, desc: title}
+//     editorStore.layers.push(obj);
+//     editorStore.updateCanvas(props.fabricWrap.canvas);
+//   }, {crossOrigin: "Anonymous"});
+// }
 </script>
 
 <template>
 <!--          <v-btn icon="mdi-arrow-left" @click="testPost()"></v-btn>-->
+<!--          <v-btn icon="mdi-arrow-left" @click="testImageToCanvas()"></v-btn>-->
   <v-card
     class="mx-auto"
     max-width="400"

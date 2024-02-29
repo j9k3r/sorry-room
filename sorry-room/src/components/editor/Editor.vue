@@ -19,27 +19,6 @@ onMounted(() => {
     backgroundColor : "#fff",
   });
 
-  const imageUrl = 'https://fakestoreapi.com/img/71-3HjGNDUL._AC_SY879._SX._UX._SY._UY_.jpg';
-  fabric.Image.fromURL(imageUrl, (img) => {
-    img.scaleToWidth(200);
-    const ob = {layer: img, desc: 'img1'}
-    editorStore.layers.push(ob);
-    editorStore.updateCanvas(fabricWrap.canvas); // обновляем canvas после добавления изображения
-  });
-  // }, {crossOrigin: "Anonymous"});
-  const rect = new fabric.Circle({ top: 10, left: 100, radius: 75, fill: "green", erasable: true });
-  const ob = { layer: rect, desc: 'figure1'}
-  editorStore.layers.push(ob);
-  editorStore.updateCanvas(fabricWrap.canvas); // обновляем canvas после добавления прямоугольника
-
-  fabricWrap.canvas.on('selection:created', function(e) {
-    const selectedObjects = e.selected;
-    const indexSelectedObject = editorStore.findIndexLayerByObject(selectedObjects[0])
-    editorStore.selectedLayerIndex = indexSelectedObject
-    // console.log('Объекты в выделении созданы', selectedObjects);
-    // console.log(selectedObjects[0])
-  });
-
   fabricWrap.canvas.on('selection:updated', function(e) {
     const selectedObjects = e.selected;
     const indexSelectedObject = editorStore.findIndexLayerByObject(selectedObjects[0])

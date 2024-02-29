@@ -22,7 +22,7 @@ function addTemplateToCanvas(imageUrl, title) {
     const obj = {layer: img, desc: title}
     editorStore.layers.push(obj);
     editorStore.updateCanvas(props.fabricWrap.canvas);
-  });
+  }, {crossOrigin: "Anonymous"});
 }
 
 function addText() {
@@ -40,11 +40,11 @@ function addText() {
 async function uploadImage(e, type) {
   if (removeBgrState.value) {
     uploadImageState.value = true
+    const file = e.target.files[0];
     try {
-      const file = e.target.files[0];
       const data = await imagesApi.removeBgrImage(file, type);
       // console.log(data);
-      const imgUrl = 'http://localhost:8000/' + data.image_url
+      const imgUrl = 'http://localhost:8000' + data.image_url
       const newLayer = {src: imgUrl, title: 'Новый слой'};
       // console.log( 'new layer', newLayer)
       editorStore.layerTemplate.push(newLayer);
@@ -58,9 +58,7 @@ async function uploadImage(e, type) {
       console.log(error);
     }
   } else {
-    const file = e.target.files[0];
     const reader = new FileReader();
-
     reader.onload = function (event) {
       const imgUrl = event.target.result;
       const newTemplate = {src: imgUrl, title: 'Новый шаблон'};
@@ -92,6 +90,17 @@ async function uploadImage(e, type) {
         hide-details
         :disabled="uploadImageState"
       ></v-switch>
+      <v-divider
+        class="mx-3 align-self-center"
+        length="24"
+        thickness="2"
+        vertical
+      ></v-divider>
+      <v-progress-circular
+        v-show="uploadImageState"
+        color="primary"
+        indeterminate
+      ></v-progress-circular>
     </v-toolbar>
     <v-card
       class="mx-auto"

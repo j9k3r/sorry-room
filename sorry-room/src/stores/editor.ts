@@ -1,6 +1,6 @@
 import {ref, computed, reactive} from 'vue'
 import { defineStore } from 'pinia'
-import {fabric} from "fabric-all-modules";
+// import {fabric} from "fabric-all-modules";
 export const useEditorStore = defineStore('editor', () => {
 const layers = reactive([])
 
@@ -50,10 +50,10 @@ function updateCanvas(canvas) {
       // canvas.setBackgroundImage(canvasOption.backgroundImg);
       canvas.setBackgroundImage(bgrImage);
     layers.forEach((obj, index) => {
-      if (obj.layer instanceof fabric.Image) {
-        const img = obj.layer._element;
-        img.crossOrigin = "Anonymous";
-      }
+      // if (obj.layer instanceof fabric.Image) {
+      //   const img = obj.layer._element;
+      //   img.crossOrigin = "Anonymous";
+      // }
      obj.layer.clone((cl) => {
      if (cl.text !== undefined) {
          // cl.scaleToHeight(25);

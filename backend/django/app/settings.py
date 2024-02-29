@@ -26,12 +26,27 @@ SECRET_KEY = 'django-insecure-5&nz*+rockmvpq3svb0)5dqycb#ingplfu+s1$r0%rjr3al^@i
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
+from django.contrib.staticfiles import handlers
+
+# extend StaticFilesHandler to add "Access-Control-Allow-Origin" to every response
+class CORSStaticFilesHandler(handlers.StaticFilesHandler):
+    def serve(self, request):
+        response = super().serve(request)
+        response['Access-Control-Allow-Origin'] = '*'
+        return response
+
+# monkeypatch handlers to use our class instead of the original StaticFilesHandler
+handlers.StaticFilesHandler = CORSStaticFilesHandler
+
 ALLOWED_HOSTS = [
-    '*'
-    # 'http://localhost:5173'
+    'localhost'
 ]
 
 CORS_ORIGIN_ALLOW_ALL=True
+
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:5173"
+]
 
 TIMEOUT = 300
 # Application definition

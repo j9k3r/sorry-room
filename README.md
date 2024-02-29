@@ -27,6 +27,11 @@
 
 созданные файлы попадают в папку на сервере /backend/django/static
 
+основано на:
+* [openvino](https://docs.openvino.ai/2023.3/notebooks/205-vision-background-removal-with-output.html)
+* [YOLO8](https://github.com/openvinotoolkit/openvino_notebooks/tree/main/notebooks/230-yolov8-optimization)
+* [Background Removal Demo](https://github.com/openvinotoolkit/openvino_notebooks/tree/main/notebooks/205-vision-background-removal)
+
 ## Project Setup Front (vue 3 vite, pinia, fabric js)
 
 ```sh

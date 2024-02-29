@@ -38,9 +38,10 @@ function addText() {
   editorStore.updateCanvas(props.fabricWrap.canvas);
 }
 async function uploadImage(e, type) {
+  const file = e.target.files[0];
   if (removeBgrState.value) {
     uploadImageState.value = true
-    const file = e.target.files[0];
+
     try {
       const data = await imagesApi.removeBgrImage(file, type);
       // console.log(data);

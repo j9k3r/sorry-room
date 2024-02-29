@@ -19,6 +19,14 @@ onMounted(() => {
     backgroundColor : "#fff",
   });
 
+  fabricWrap.canvas.on('selection:created', function(e) {
+    const selectedObjects = e.selected;
+    const indexSelectedObject = editorStore.findIndexLayerByObject(selectedObjects[0])
+    editorStore.selectedLayerIndex = indexSelectedObject
+    // console.log('Объекты в выделении созданы', selectedObjects);
+    // console.log(selectedObjects[0])
+  });
+
   fabricWrap.canvas.on('selection:updated', function(e) {
     const selectedObjects = e.selected;
     const indexSelectedObject = editorStore.findIndexLayerByObject(selectedObjects[0])

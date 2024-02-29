@@ -1,27 +1,33 @@
 # sorry-room
 
-This template should help get you started developing with Vue 3 in Vite.
+Извинятельная комната (фото редактор)
+## Project Setup back (django 4.3 - openvino,tensorflow,torch)
+* список пакетов python
+  + Django>=4.0,<4.3
+  + djangorestframework>3.0, <4.0
+  + pillow<10.2.0
+  + ipython<8.22.0
+  + gdown<2.3.0
+  + ipywidgets<8.2.0
+  + numpy<1.26.0
+  + opencv-python<4.9.1.00
+  + matplotlib<3.8.3
+  + openvino<2023.4.0
+  + torch<2.3.0
+  + tensorflow<2.16.0
+  + django-cors-headers<=4.3.1
 
-## Recommended IDE Setup
+Для сборки достаточно запустить docker-compose up -d в процессе сборки произойдет установка пакетов из requirements.txt итоговый образ весит 12.1гб
 
-[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur) + [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin).
+далее необходимо добавить папку [u2net_human_seg](https://disk.yandex.ru/d/ITh3fyNMPS171Q)  с моделью u2net_human_seg.pth (168мб) в /backend/django/vino/image_cleaner/model
 
-## Type Support for `.vue` Imports in TS
+имеет два основных метода 
+  + post на localhost:8000/test/ для проверки cors
+  + post на localhost:8000/person/ c обязательными параметрами "type = bgr", и полем для файла img_src
 
-TypeScript cannot handle type information for `.vue` imports by default, so we replace the `tsc` CLI with `vue-tsc` for type checking. In editors, we need [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin) to make the TypeScript language service aware of `.vue` types.
+созданные файлы попадают в папку на сервере /backend/django/static
 
-If the standalone TypeScript plugin doesn't feel fast enough to you, Volar has also implemented a [Take Over Mode](https://github.com/johnsoncodehk/volar/discussions/471#discussioncomment-1361669) that is more performant. You can enable it by the following steps:
-
-1. Disable the built-in TypeScript Extension
-    1) Run `Extensions: Show Built-in Extensions` from VSCode's command palette
-    2) Find `TypeScript and JavaScript Language Features`, right click and select `Disable (Workspace)`
-2. Reload the VSCode window by running `Developer: Reload Window` from the command palette.
-
-## Customize configuration
-
-See [Vite Configuration Reference](https://vitejs.dev/config/).
-
-## Project Setup
+## Project Setup Front (vue 3 vite, pinia, fabric js)
 
 ```sh
 npm install

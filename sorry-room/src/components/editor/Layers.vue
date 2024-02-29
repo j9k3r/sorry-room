@@ -1,152 +1,15 @@
 <script setup lang="ts" async>
-import {useEditorStore} from "@/stores/editor";
-import {computed, ref} from "vue";
-import {fabric} from "fabric-all-modules";
-import imagesApi from "@/services/imagesApi";
+
+import {ref} from "vue";
+import LayerTab from "@/components/editor/tabs/LayerTab.vue";
+import BackgroundTab from "@/components/editor/tabs/BackgroundTab.vue";
+import TemplateTab from "@/components/editor/tabs/TemplateTab.vue";
 
 const props = defineProps({
   fabricWrap: Object
 })
 
-const editorStore = useEditorStore();
-
-const layersReverse = computed(() => {
-  return editorStore.layers.slice().reverse()
-})
-
 const tab = ref()
-const backgroundFileInput = ref(null)
-const templateFileInput = ref(null)
-const removeBgrState = ref(false)
-const uploadImageState = ref(false)
-
-async function testPost() {
-  try {
-      const data = await imagesApi.testPost();
-      console.log(data);
-      // обработайте ответ здесь
-    } catch (error) {
-      console.log(error);
-      // обработайте ошибку здесь
-    }
-}
-
-function selectLayer(id) {
-    const index = editorStore.findIndexLayerById(id)
-    props.fabricWrap.canvas.discardActiveObject();
-    props.fabricWrap.canvas.setActiveObject(props.fabricWrap.canvas.item(index))
-    props.fabricWrap.canvas.requestRenderAll();
-}
-
-function wrapInSvg(htmlString) {
-  // Оборачиваем htmlString в элемент SVG
-  const svgString = `<svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" viewBox="0 0 50 50">${htmlString}</svg>`;
-
-  const x = convertToBase64(svgString)
-
-  return x
-}
-
-function convertToBase64(svgString) {
-  const svgBlob = new Blob([svgString], {type: 'image/svg+xml'});
-  const reader = new FileReader();
-  reader.readAsDataURL(svgBlob);
-  reader.onloadend = function() {
-    const base64data = reader.result;
-    return base64data
-    // Используйте полученную строку base64data для передачи в атрибут src элемента <img>
-    // Например:
-    // document.getElementById('myImg').src = base64data;
-  }
-}
-
-function setBackgroundImage(image, canvas, index) {
-  fabric.Image.fromURL(image, function(img) {
-    // Устанавливаем размер изображения равным размеру Canvas
-    // img.scaleToWidth(canvas.width);
-    // img.scaleToHeight(canvas.height);
-
-    editorStore.canvasOption.width = img.width;
-    editorStore.canvasOption.height = img.height;
-    // Добавляем изображение в Canvas в качестве заднего фона
-    canvas.setBackgroundImage(img, canvas.renderAll.bind(canvas));
-    editorStore.selectedBackground = index
-    // editorStore.canvasOption.backgroundImg = img
-
-      // const backgroundImage = canvas.backgroundImage;
-      // const width = backgroundImage.width;
-      // const height = backgroundImage.height;
-      // console.log('Ширина изображения:', width);
-      // console.log('Высота изображения:', height);
-  });
-}
-
-async function uploadImage(e, type) {
-  if (removeBgrState.value) {
-    uploadImageState.value = true
-    try {
-      const file = e.target.files[0];
-      const data = await imagesApi.removeBgrImage(file, type);
-      // console.log(data);
-      const imgUrl = 'http://localhost:8000/' + data.image_url
-      const newLayer = {src: imgUrl, title: 'Новый слой'};
-      // console.log( 'new layer', newLayer)
-      editorStore.layerTemplate.push(newLayer);
-      removeBgrState.value = false
-      uploadImageState.value = false
-      templateFileInput.value.reset();
-    } catch (error) {
-      removeBgrState.value = false
-      uploadImageState.value = false
-      templateFileInput.value.reset();
-      console.log(error);
-    }
-  } else {
-    const file = e.target.files[0];
-    const reader = new FileReader();
-
-    reader.onload = function (event) {
-      const imgUrl = event.target.result;
-
-      if (type === 'background') {
-        const newBackground = {src: imgUrl, title: 'Новый фон'};
-        editorStore.backgrounds.push(newBackground);
-        // e.target.value = null
-      }
-
-      if (type === 'template') {
-        const newTemplate = {src: imgUrl, title: 'Новый шаблон'};
-        editorStore.layerTemplate.push(newTemplate);
-      }
-    };
-    reader.readAsDataURL(file);
-  }
-  templateFileInput.value.reset();
-}
-
-function addTemplateToCanvas(imageUrl, title) {
-  fabric.Image.fromURL(imageUrl, (img) => {
-    img.scale(0.5); // Масштабируем изображение
-    // props.fabricWrap.canvas.add(img); // Добавляем изображение на холст
-    const obj = {layer: img, desc: title}
-    editorStore.layers.push(obj);
-    editorStore.updateCanvas(props.fabricWrap.canvas);
-  });
-}
-
-function addText() {
-  const sampleText = new fabric.Textbox('example', {
-    left: 100,
-    top: 100,
-    fontSize: 20,
-    fontFamily: 'Arial',
-    fill: 'black'
-  });
-  const textWrap = { layer: sampleText, desc: 'new text'}
-  editorStore.layers.push(textWrap);
-  editorStore.updateCanvas(props.fabricWrap.canvas);
-}
-
 </script>
 
 <template>
@@ -166,126 +29,15 @@ function addText() {
     <v-card-text>
       <v-window v-model="tab">
         <v-window-item value="one">
-<!--          <v-btn icon="mdi-arrow-left" @click="testPost()"></v-btn>-->
-            <v-card
-              class="mx-auto"
-              max-width="400"
-              v-for="(item, index) in layersReverse" :key="index"
-            >
-              <v-list-item
-                  :class="editorStore.selectedLayerIndex === editorStore.findIndexLayerById(item.id) ? 'border' : ''"
-              >
-               <template v-slot:title class="bg-cyan-darken-1">
-                 <div>
-                  index: {{ index }}, id: {{ item.id }}
-                 </div>
-                 <div>
-                   <v-defaults-provider
-                      :defaults="{
-                        VBtn: {
-                          variant: 'text',
-                          density: 'comfortable',
-                        }
-                      }"
-                    >
-                      <v-btn icon="mdi-arrow-up-bold-outline"  @click="editorStore.moveLayerUp(item.id, props.fabricWrap.canvas)"></v-btn>
-                      <v-btn icon="mdi-arrow-down-bold-outline" @click="editorStore.moveLayerDown(item.id, props.fabricWrap.canvas)"></v-btn>
-                    </v-defaults-provider>
-                 </div>
-               </template>
-               <template v-slot:prepend>
-                 <v-icon
-                     @click="selectLayer(item.id)"
-                 >
-                   <svg xmlns="http://www.w3.org/2000/svg"width="50" height="50"  viewBox="0 0 50 50"
-                       v-html="item.cloned">
-                  </svg>
-                 </v-icon>
-               </template>
-                <template v-slot:subtitle>
-                  <v-text-field label="Layer Name" v-model="editorStore.layers[editorStore.findIndexLayerById(item.id)].desc"></v-text-field>
-<!--                  {{ item.desc }}-->
-                </template>
-              </v-list-item>
-            </v-card>
+          <layer-tab :fabricWrap="props.fabricWrap"></layer-tab>
         </v-window-item>
 
         <v-window-item value="two">
-<!--          <input type="file" @change="uploadImage" accept="image/*" />-->
-          <v-file-input
-            ref="backgroundFileInput"
-            label="Add background file"
-            placeholder="Select your file"
-            accept="image/png, image/jpeg, image/bmp"
-            density="compact"
-            @change="uploadImage($event, 'background')"
-          ></v-file-input>
-          <v-card
-            class="mx-auto"
-            max-width="425"
-            v-for="(item, index) in editorStore.backgrounds" :key="index"
-          >
-            <v-list-item :class="editorStore.selectedBackground === index ? 'border' : ''">
-             <template v-slot:title class="bg-cyan-darken-1">
-               <div>
-                index: {{ index }}
-               </div>
-             </template>
-             <template v-slot:prepend>
-               <v-icon>
-                  <img :src="item.src" width="50px" @click="setBackgroundImage(item.src, props.fabricWrap.canvas, index)">
-               </v-icon>
-             </template>
-              <template v-slot:subtitle>
-                <v-text-field label="Background Name" v-model="editorStore.backgrounds[index].title"></v-text-field>
-<!--                {{ item.title }}-->
-              </template>
-            </v-list-item>
-          </v-card>
+          <background-tab :fabricWrap="props.fabricWrap"></background-tab>
         </v-window-item>
 
         <v-window-item value="three">
-          <v-file-input
-              ref="templateFileInput"
-              label="Add template file"
-              placeholder="Select your file"
-              accept="image/png, image/jpeg, image/bmp"
-              density="compact"
-              @change="uploadImage($event, 'template')"
-              :disabled="uploadImageState"
-          ></v-file-input>
-          <v-toolbar>
-            <v-btn icon="mdi-format-text" @click="addText"></v-btn>
-            <v-switch
-              v-model="removeBgrState"
-              label="remove background"
-              color="success"
-              hide-details
-              :disabled="uploadImageState"
-            ></v-switch>
-          </v-toolbar>
-          <v-card
-            class="mx-auto"
-            max-width="425"
-            v-for="(item, index) in editorStore.layerTemplate" :key="index"
-          >
-            <v-list-item>
-             <template v-slot:title class="bg-cyan-darken-1">
-               <div>
-                index: {{ index }}
-               </div>
-             </template>
-             <template v-slot:prepend>
-               <v-icon>
-                  <img :src="item.src" width="50px" @click="addTemplateToCanvas(item.src, item.title)">
-               </v-icon>
-             </template>
-              <template v-slot:subtitle>
-                <v-text-field label="Template Name" v-model="editorStore.layerTemplate[index].title"></v-text-field>
-<!--                {{ item.title }}-->
-              </template>
-            </v-list-item>
-          </v-card>
+          <template-tab :fabricWrap="props.fabricWrap"></template-tab>
         </v-window-item>
       </v-window>
     </v-card-text>

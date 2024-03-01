@@ -4,6 +4,10 @@ import {computed} from "vue";
 import {fabric} from "fabric-all-modules";
 import {useEditorStore} from "@/stores/editor";
 
+const props = defineProps({
+  layerIsImage: Boolean
+})
+
 const editorStore = useEditorStore();
 
 const filters = ['grayscale',  'sepia', 'brownie', 'vintage', 'kodachrome', 'technicolor', 'polaroid']
@@ -54,7 +58,7 @@ const appliedFilters = computed({
 </script>
 
 <template>
-  <v-list-group value="Filters">
+  <v-list-group value="Filters" v-show="props.layerIsImage !== -1 && props.layerIsImage">
     <template v-slot:activator="{ props }">
       <v-list-item
         v-bind="props"

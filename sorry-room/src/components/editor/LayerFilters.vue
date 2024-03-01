@@ -1,8 +1,10 @@
 <script setup lang="ts">
+
 import {useEditorStore} from "@/stores/editor";
 import {computed, ref} from "vue";
 import ImagesFilter from "@/components/editor/filters/imagesFilter.vue";
 import TextFilter from "@/components/editor/filters/textFilter.vue";
+import {fabric} from "fabric-all-modules";
 
 const props = defineProps({
   fabricWrap: Object,
@@ -28,6 +30,15 @@ const FilterBlockedLayer = computed({
     editorStore.layers[editorStore.selectedLayerIndex].layer.set('erasable', value)
   }
 });
+
+const layerIsImage = computed(() => {
+  if (editorStore.selectedLayerIndex !== -1) {
+    if (editorStore.layers[editorStore.selectedLayerIndex].layer instanceof fabric.Image) {
+        return true
+    }
+    return false
+  } else return -1
+})
 </script>
 
 <template>
@@ -55,9 +66,9 @@ const FilterBlockedLayer = computed({
         <v-list-item-title>Blocked layer</v-list-item-title>
       </v-list-item>
 
-      <images-filter></images-filter>
+      <images-filter :layer-is-image="layerIsImage"></images-filter>
 
-      <text-filter></text-filter>
+      <text-filter :layer-is-image="layerIsImage"></text-filter>
     </v-list>
   </v-card>
 </section>

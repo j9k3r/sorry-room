@@ -3,6 +3,10 @@
 import {computed} from "vue";
 import {useEditorStore} from "@/stores/editor";
 
+const props = defineProps({
+  layerIsImage: Boolean
+})
+
 const editorStore = useEditorStore();
 
 const fonts = ['Arial', 'Verdana', 'Tahoma', 'Times New Roman', 'Courier New', 'Georgia']
@@ -56,7 +60,7 @@ const filterTextFontStyle = computed({
 </script>
 
 <template>
-  <v-list-group value="Text">
+  <v-list-group value="Text" v-show="props.layerIsImage !== -1 && !props.layerIsImage">
         <template v-slot:activator="{ props }">
           <v-list-item
             v-bind="props"
